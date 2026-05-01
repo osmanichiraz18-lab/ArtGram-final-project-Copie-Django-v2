@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Interactions - ArtGram{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Communauté</div>
+    <h2>Vos <em>interactions</em></h2>
+    <div class="rule"></div>
+</div>
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="background: var(--white); border: 1px solid var(--sand); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
+        <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Activité récente</h3>
+        <div style="display: flex; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--parchment);">
+            <div style="width: 40px; height: 40px; background: var(--parchment); border-radius: 50%; margin-right: 1rem; display: flex; align-items: center; justify-content: center;">❤️</div>
+            <div style="flex: 1;">
+                <p style="margin: 0; color: var(--espresso);"><strong>Sophie Laurent</strong> a aimé votre œuvre "Mémoires d'été"</p>
+                <p style="margin: 0; font-size: 0.8rem; color: var(--mist);">Il y a 2 heures</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--parchment);">
+            <div style="width: 40px; height: 40px; background: var(--parchment); border-radius: 50%; margin-right: 1rem; display: flex; align-items: center; justify-content: center;">💬</div>
+            <div style="flex: 1;">
+                <p style="margin: 0; color: var(--espresso);"><strong>Marc Dubois</strong> a commenté "Magnifique composition!"</p>
+                <p style="margin: 0; font-size: 0.8rem; color: var(--mist);">Il y a 5 heures</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; padding: 1rem 0;">
+            <div style="width: 40px; height: 40px; background: var(--parchment); border-radius: 50%; margin-right: 1rem; display: flex; align-items: center; justify-content: center;">👤</div>
+            <div style="flex: 1;">
+                <p style="margin: 0; color: var(--espresso);"><strong>Clara Rousseau</strong> a commencé à vous suivre</p>
+                <p style="margin: 0; font-size: 0.8rem; color: var(--mist);">Il y a 1 jour</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="background: var(--white); border: 1px solid var(--sand); border-radius: 8px; padding: 2rem;">
+        <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Statistiques</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
+            <div>
+                <div style="font-size: 2rem; font-weight: 600; color: var(--espresso);">24</div>
+                <div style="font-size: 0.9rem; color: var(--mist);">Likes reçus</div>
+            </div>
+            <div>
+                <div style="font-size: 2rem; font-weight: 600; color: var(--espresso);">8</div>
+                <div style="font-size: 0.9rem; color: var(--mist);">Commentaires</div>
+            </div>
+            <div>
+                <div style="font-size: 2rem; font-weight: 600; color: var(--espresso);">156</div>
+                <div style="font-size: 0.9rem; color: var(--mist);">Abonnés</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

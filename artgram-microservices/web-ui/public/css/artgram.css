@@ -1,0 +1,272 @@
+/* -----------------------------------------------
+    ARTGRAM — GALLERY REFINED STYLE
+    Preserves all Django template tags, URLs, blocks
+    Complete visual overhaul: elegant, minimalist, art-gallery inspired
+----------------------------------------------- */
+:root {
+    --cream:    #f5f0e8;
+    --parchment:#ede6d6;
+    --sand:     #d6c9b0;
+    --gold:     #b59a6a;
+    --brown:    #5a3e28;
+    --espresso: #2b1d12;
+    --ink:      #1a1410;
+    --mist:     #8a7d6e;
+    --white:    #fdfaf5;
+    --serif:    'Playfair Display', Georgia, serif;
+    --narrow:   'Cormorant Garamond', serif;
+    --sans:     'Jost', sans-serif;
+    --ease:     cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --shadow:   0 6px 24px rgba(42, 28, 16, 0.08);
+    --shadow-lg:0 18px 42px rgba(42, 28, 16, 0.14);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--sans);
+    background-color: var(--cream);
+    color: var(--ink);
+    font-weight: 300;
+    line-height: 1.5;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* subtle noise texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* ----- HEADER (elegant, minimalist) ----- */
+.header {
+    background: rgba(245, 240, 232, 0.92);
+    backdrop-filter: blur(10px);
+    color: var(--espresso);
+    padding: 1.2rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--sand);
+    position: relative;
+    z-index: 10;
+}
+.header h1 {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--espresso);
+}
+.header h1::after {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0.6rem auto 0.35rem;
+}
+.header p {
+    font-family: var(--narrow);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--mist);
+    margin-top: 0.3rem;
+}
+
+/* ----- NAVIGATION (glassmorphism, refined underlines) ----- */
+.nav {
+    background: rgba(245, 240, 232, 0.94);
+    backdrop-filter: blur(12px);
+    padding: 0.65rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid var(--sand);
+}
+.nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+.nav li {
+    margin: 0;
+}
+.nav a {
+    color: var(--mist);
+    text-decoration: none;
+    padding: 0.55rem 1.2rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.25s var(--ease), background 0.2s;
+    position: relative;
+    border-radius: 0;
+}
+.nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 1.2rem;
+    right: 1.2rem;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease);
+}
+.nav a:hover {
+    color: var(--espresso);
+    background: transparent;
+}
+.nav a:hover::after {
+    transform: scaleX(1);
+}
+
+/* ----- MAIN CONTENT (airy, gallery layout) ----- */
+.content {
+    max-width: 1280px;
+    margin: 2rem auto;
+    padding: 0 2rem 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* subtle animated fade-in for blocks (optional for django content) */
+@keyframes softAppear {
+    from { opacity: 0; transform: translateY(12px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+.content > * {
+    animation: softAppear 0.55s var(--ease);
+}
+
+/* ----- footer (minimal, elegant) ----- */
+.footer {
+    background: transparent;
+    color: var(--mist);
+    text-align: center;
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--sand);
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* ----- custom elements for django blocks (visual refinements) ----- */
+/* gallery grid (to be used if any view returns lists) */
+.art-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.8rem;
+    margin: 2rem 0;
+}
+.art-card {
+    background: var(--white);
+    border: 1px solid var(--sand);
+    transition: transform 0.35s var(--ease), box-shadow 0.35s;
+    overflow: hidden;
+    border-radius: 8px;
+}
+.art-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+.art-card-img {
+    aspect-ratio: 4 / 3;
+    background: var(--parchment);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mist);
+    font-size: 0.8rem;
+}
+.art-card-info {
+    padding: 1rem;
+    border-top: 1px solid var(--parchment);
+}
+.art-card-info h3 {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--espresso);
+}
+
+/* hero component (for eventual intro block) */
+.hero-gallery {
+    text-align: center;
+    padding: 1.5rem 1rem 2.2rem;
+    border-bottom: 1px solid var(--sand);
+    margin-bottom: 2rem;
+}
+.hero-gallery .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+.hero-gallery h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 400;
+    color: var(--espresso);
+    margin: 0.5rem 0;
+}
+.hero-gallery .rule {
+    width: 48px;
+    height: 1px;
+    background: var(--gold);
+    margin: 1rem auto 0;
+}
+
+/* buttons & refinements */
+.btn-outline {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid var(--sand);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--espresso);
+}
+.btn-outline:hover {
+    background: var(--espresso);
+    color: var(--cream);
+    border-color: var(--espresso);
+}
+
+/* responsive adjustments */
+@media (max-width: 720px) {
+    .content {
+        padding: 0 1rem 1.5rem;
+    }
+    .nav a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.65rem;
+    }
+    .nav ul {
+        gap: 0.1rem;
+    }
+    .header h1 {
+        font-size: 1.6rem;
+    }
+}
+
+/* preserve django template syntax highlight – no changes to blocks */

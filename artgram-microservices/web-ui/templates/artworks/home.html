@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Galerie d'Art - ArtGram{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Galerie communautaire</div>
+    <h2>Découvrez les <em>créations</em></h2>
+    <div class="rule"></div>
+</div>
+
+{% if user.is_authenticated %}
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{% url 'artworks:create' %}" class="btn-outline">+ Ajouter une œuvre</a>
+</div>
+{% endif %}
+
+<div class="art-grid">
+    {% for artwork in artworks %}
+    <div class="art-card">
+        <a href="{% url 'artworks:detail' artwork.slug %}">
+            {% if artwork.image %}
+                <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}" class="art-card-img">
+            {% else %}
+                <div class="art-card-img">🎨 {{ artwork.title }}</div>
+            {% endif %}
+        </a>
+        <div class="art-card-info">
+            <h3>{{ artwork.title }}</h3>
+            <p style="font-size:0.85rem; color:#8a7d6e; margin-top:0.3rem;">
+                Par {{ artwork.artist.username }} — {{ artwork.get_category_display }}
+            </p>
+            <p style="font-size:0.8rem; color:#8a7d6e; margin-top:0.2rem;">
+                ❤️ {{ artwork.get_likes_count }} • 👁️ {{ artwork.views_count }}
+            </p>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+        <p style="color: #8a7d6e; font-style: italic;">Aucune œuvre disponible pour le moment.</p>
+        {% if user.is_authenticated %}
+            <p style="margin-top: 1rem;">
+                <a href="{% url 'artworks:create' %}" class="btn-outline">Soyez le premier à ajouter une œuvre!</a>
+            </p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% if user.is_authenticated %}
+<div style="text-align: center; margin: 3rem 0;">
+    <a href="{% url 'artworks:my_artworks' %}" class="btn-outline">Voir mes œuvres</a>
+</div>
+{% endif %}
+
+<style>
+.art-grid {
+    background: #f5f0e8;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.art-card {
+    background: white;
+    border: 1px solid #d6c9b0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.art-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.art-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.art-card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #d6c9b0;
+}
+
+.art-card-info {
+    padding: 1rem;
+    background: #faf8f3;
+    border-top: 1px solid #d6c9b0;
+}
+
+.art-card-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #2b1d12;
+    font-weight: 500;
+}
+
+.art-card-info p {
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+    color: #8a7d6e;
+}
+</style>
+{% endblock %}

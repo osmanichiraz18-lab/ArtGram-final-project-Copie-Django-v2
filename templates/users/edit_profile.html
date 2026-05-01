@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile - ArtGram{% endblock %}
+
+{% block extra_head %}
+<style>
+input[type="text"], input[type="email"], input[type="password"], textarea, input[type="file"] {
+    width: 100% !important;
+    padding: 0.75rem !important;
+    border: 1px solid #d6c9b0 !important;
+    border-radius: 6px !important;
+    font-family: Jost, sans-serif !important;
+    font-size: 0.9rem !important;
+    background: #fdfaf5 !important;
+    color: #2b1d12 !important;
+    box-sizing: border-box !important;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus, input[type="file"]:focus {
+    outline: none !important;
+    border-color: #b59a6a !important;
+    box-shadow: 0 0 0 2px rgba(181, 154, 106, 0.2) !important;
+}
+
+input[type="checkbox"] {
+    width: auto !important;
+    margin-right: 0.5rem !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Settings</div>
+    <h2>Edit your <em>profile</em></h2>
+    <div class="rule"></div>
+</div>
+
+<div style="max-width: 550px; margin: 2rem auto; padding: 2.5rem; background: var(--white); border: 1px solid var(--sand); border-radius: 12px; box-shadow: var(--shadow);">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="{{ form.display_name.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Display Name:</label>
+            {{ form.display_name }}
+            <p style="font-size: 0.8rem; color: var(--mist); margin-top: 0.5rem;">This is how others will see your name (optional)</p>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="{{ form.bio.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Bio:</label>
+            {{ form.bio }}
+            <p style="font-size: 0.8rem; color: var(--mist); margin-top: 0.5rem;">Tell us about your artistic journey and style</p>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="{{ form.profile_picture.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Profile Picture:</label>
+            {{ form.profile_picture }}
+            <p style="font-size: 0.8rem; color: var(--mist); margin-top: 0.5rem;">Upload a new profile picture (optional)</p>
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <label for="{{ form.is_artist.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">
+                {{ form.is_artist }} I am an artist
+            </label>
+            <p style="font-size: 0.8rem; color: var(--mist); margin-top: 0.5rem;">Let others know you create art</p>
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" style="flex: 1; padding: 1rem; background-color: var(--espresso); color: var(--cream); border: none; border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; cursor: pointer; transition: background-color 0.2s;">
+                Save Changes
+            </button>
+            <a href="/profile/@{{ user.username }}/" style="flex: 1; padding: 1rem; background-color: transparent; color: var(--espresso); text-decoration: none; border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; border: 1px solid var(--sand); text-align: center; transition: all 0.2s;">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}{{ artwork.title }} - ArtGram{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">{{ artwork.get_category_display }}</div>
+    <h2>{{ artwork.title }}</h2>
+    <div class="rule"></div>
+</div>
+
+<div class="artwork-detail">
+    <div class="artwork-image">
+        {% if artwork.image %}
+            <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}" style="width: 100%; border-radius: 8px;">
+        {% else %}
+            <div style="background: var(--mist); height: 400px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                🎨
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="artwork-info">
+        <div class="artist-info">
+            <strong>Artiste:</strong> {{ artwork.artist.username }}
+        </div>
+        
+        {% if artwork.year %}
+        <div class="artwork-meta">
+            <strong>Année:</strong> {{ artwork.year }}
+        </div>
+        {% endif %}
+        
+        {% if artwork.medium %}
+        <div class="artwork-meta">
+            <strong>Technique:</strong> {{ artwork.medium }}
+        </div>
+        {% endif %}
+        
+        <div class="artwork-meta">
+            <strong>Créé le:</strong> {{ artwork.created_at|date:"d F Y" }}
+        </div>
+        
+        <div class="artwork-stats">
+            <span>❤️ {{ artwork.get_likes_count }} j'aime</span>
+            <span>👁️ {{ artwork.views_count }} vues</span>
+            <span>💬 {{ artwork.get_comments_count }} commentaires</span>
+        </div>
+        
+        <div class="artwork-description">
+            <h3>Description</h3>
+            <p>{{ artwork.description|linebreaks }}</p>
+        </div>
+        
+        {% if user.is_authenticated and artwork.artist == user %}
+        <div class="artwork-actions">
+            <a href="{% url 'artworks:edit' artwork.slug %}" class="btn-outline">Modifier</a>
+            <a href="{% url 'artworks:delete' artwork.slug %}" class="btn-danger">Supprimer</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.artwork-detail {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.artist-info {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.artwork-meta {
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.artwork-stats {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--background);
+    border-radius: 8px;
+}
+
+.artwork-stats span {
+    margin-right: 1rem;
+    font-size: 0.9rem;
+}
+
+.artwork-description {
+    margin-top: 1.5rem;
+}
+
+.artwork-description h3 {
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.artwork-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+@media (max-width: 768px) {
+    .artwork-detail {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

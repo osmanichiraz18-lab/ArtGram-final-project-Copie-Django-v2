@@ -1,0 +1,631 @@
+{% extends "base.html" %}
+
+{% block title %}Explore - ArtGram{% endblock %}
+
+{% block extra_head %}
+<style>
+.filter-section {
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.filter-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    font-family: var(--sans);
+    font-weight: 500;
+    color: var(--espresso);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 0.75rem;
+    border: 1px solid var(--sand);
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    background: var(--white);
+    color: var(--espresso);
+}
+
+.search-bar {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1rem;
+    border: 1px solid var(--sand);
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 1rem;
+    background: var(--white);
+    color: var(--espresso);
+}
+
+.search-bar::after {
+    content: "🔍";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+}
+
+.artwork-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.artwork-modal.show {
+    display: block;
+}
+
+.modal-content {
+    position: relative;
+    max-width: 1200px;
+    margin: 2rem auto;
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--white);
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1001;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-image {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    background: var(--parchment);
+}
+
+.modal-info {
+    padding: 2rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.action-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.like-btn {
+    background: var(--espresso);
+    color: var(--cream);
+}
+
+.like-btn.liked {
+    background: #e74c3c;
+}
+
+.save-btn {
+    background: var(--gold);
+    color: var(--white);
+}
+
+.follow-btn {
+    background: var(--sand);
+    color: var(--espresso);
+}
+
+.follow-btn.following {
+    background: var(--mist);
+    color: var(--white);
+}
+
+.load-more {
+    text-align: center;
+    margin: 3rem 0;
+}
+
+.load-more button {
+    padding: 1rem 2rem;
+    background: var(--espresso);
+    color: var(--cream);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.load-more button:hover {
+    background: var(--brown);
+}
+
+@media (max-width: 768px) {
+    .filter-controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Discover</div>
+    <h2>Explore <em>contemporary art</em></h2>
+    <div class="rule"></div>
+</div>
+
+<!-- Search Bar -->
+<div class="search-bar">
+    <input type="text" id="search-input" placeholder="Search by artist name, artwork title, or tags...">
+</div>
+
+<!-- Filter Section -->
+<div class="filter-section">
+    <div class="filter-controls">
+        <div class="filter-group">
+            <label for="medium-filter">Medium</label>
+            <select id="medium-filter">
+                <option value="">All Mediums</option>
+                <option value="painting">Painting</option>
+                <option value="photography">Photography</option>
+                <option value="digital">Digital Art</option>
+                <option value="mixed">Mixed Media</option>
+                <option value="sculpture">Sculpture</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="category-filter">Category</label>
+            <select id="category-filter">
+                <option value="">All Categories</option>
+                <option value="abstract">Abstract</option>
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+                <option value="still_life">Still Life</option>
+                <option value="urban">Urban</option>
+                <option value="nature">Nature</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="sort-filter">Sort By</label>
+            <select id="sort-filter">
+                <option value="newest">Newest First</option>
+                <option value="popular">Most Popular</option>
+                <option value="random">Random</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="date-filter">Date Range</label>
+            <select id="date-filter">
+                <option value="">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Artwork Grid -->
+<div id="artwork-grid" class="art-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+    {% for artwork in artworks %}
+        <div class="art-card" style="background: var(--white); border: 1px solid var(--sand); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: transform 0.3s; cursor: pointer;" onclick="openModal({{ artwork.id }})">
+            <div class="art-card-img" style="aspect-ratio: 4/3; background: linear-gradient(45deg, var(--parchment), var(--sand)); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--gold);">
+                {% if artwork.image %}
+                    <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    🎨
+                {% endif %}
+            </div>
+            <div class="art-card-info" style="padding: 1.5rem;">
+                <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 0.5rem;">{{ artwork.title }}</h3>
+                <p style="color: var(--mist); font-size: 0.9rem; margin-bottom: 1rem;">
+                    by <a href="/profile/@{{ artwork.artist.username }}/" style="color: var(--gold); text-decoration: none; font-weight: 500;" onclick="event.stopPropagation();">
+                        {% if artwork.artist.display_name %}
+                            {{ artwork.artist.display_name }}
+                        {% else %}
+                            {{ artwork.artist.username }}
+                        {% endif %}
+                    </a> — {{ artwork.medium|default:"Art" }}
+                </p>
+                <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--mist);">
+                    <span>❤️ {{ artwork.get_likes_count }}</span>
+                    <span>💬 {{ artwork.get_comments_count }}</span>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--mist);">
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">No artworks found in the database.</p>
+            <p style="font-size: 0.9rem;">Be the first to <a href="/profile/add-work/" style="color: var(--gold); text-decoration: none;">upload an artwork!</a></p>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Load More Button (hidden for database artworks) -->
+<div class="load-more" style="display: none;">
+    <button id="load-more-btn">Load More Artworks</button>
+</div>
+
+<!-- Artwork Modal -->
+<div id="artwork-modal" class="artwork-modal">
+    <div class="modal-content" style="display: flex; max-width: 800px;">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-image" id="modal-image" style="width: 400px; height: 400px; flex-shrink: 0;">
+            <!-- Image will be loaded here -->
+        </div>
+        <div class="modal-info" style="flex: 1; padding: 2rem; display: flex; flex-direction: column;">
+            <h2 id="modal-title" style="font-family: var(--serif); color: var(--espresso); margin-bottom: 0.5rem;">Artwork Title</h2>
+            <p id="modal-artist" style="color: var(--mist); font-size: 0.9rem; margin-bottom: 1rem;">Artist Name</p>
+            <p id="modal-description" style="color: var(--espresso); line-height: 1.6; margin-bottom: 1.5rem;">Artwork description...</p>
+            
+            <div class="modal-actions" style="display: flex; gap: 0.75rem; margin-bottom: 2rem;">
+                <button class="action-btn like-btn" id="like-btn" onclick="toggleLike()" style="padding: 0.5rem 1rem; background: var(--white); border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); cursor: pointer;">
+                    <span id="like-icon">❤️</span> <span id="like-count">0</span>
+                </button>
+                <button class="action-btn save-btn" onclick="saveArtwork()" style="padding: 0.5rem 1rem; background: var(--white); border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); cursor: pointer;">
+                    🔖 Save
+                </button>
+                <button class="action-btn follow-btn" id="follow-btn" onclick="toggleFollow()" style="padding: 0.5rem 1rem; background: var(--espresso); color: var(--cream); border: none; border-radius: 6px; font-family: var(--sans); cursor: pointer;">
+                    Follow Artist
+                </button>
+            </div>
+            
+            <div class="comments-section" id="comments-section" style="flex: 1;">
+                <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Comments</h3>
+                <div id="comments-list" style="max-height: 200px; overflow-y: auto; margin-bottom: 1rem;">
+                    <!-- Comments will be loaded here -->
+                </div>
+                <div>
+                    <textarea id="comment-input" placeholder="Add a comment..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); resize: vertical; min-height: 80px;"></textarea>
+                    <button onclick="postComment()" style="margin-top: 0.5rem; padding: 0.75rem 1.5rem; background: var(--espresso); color: var(--cream); border: none; border-radius: 6px; font-family: var(--sans); font-weight: 500; cursor: pointer;">Post Comment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Real artwork data from database
+const artworksData = [
+    {% for artwork in artworks %}
+    {
+        id: {{ artwork.id }},
+        title: "{{ artwork.title|escapejs }}",
+        artist: "{% if artwork.artist.display_name %}{{ artwork.artist.display_name|escapejs }}{% else %}{{ artwork.artist.username|escapejs }}{% endif %}",
+        username: "{{ artwork.artist.username }}",
+        medium: "{{ artwork.medium|default:'Art'|escapejs }}",
+        category: "{{ artwork.category }}",
+        likes: {{ artwork.get_likes_count }},
+        comments: {{ artwork.get_comments_count }},
+        image: "{% if artwork.image %}{{ artwork.image.url }}{% else %}🎨{% endif %}",
+        description: "{{ artwork.description|escapejs }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+
+let currentArtwork = null;
+let likedArtworks = new Set();
+let followedArtists = new Set();
+
+// Initialize the explore page
+function initExplore() {
+    setupEventListeners();
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', initExplore);
+
+// Setup event listeners
+function setupEventListeners() {
+    // Search functionality
+    document.getElementById('search-input').addEventListener('input', filterArtworks);
+    
+    // Filter functionality
+    ['medium-filter', 'category-filter', 'sort-filter', 'date-filter'].forEach(id => {
+        document.getElementById(id).addEventListener('change', filterArtworks);
+    });
+}
+
+// Filter artworks based on search and filters
+function filterArtworks() {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const medium = document.getElementById('medium-filter').value;
+    const category = document.getElementById('category-filter').value;
+    
+    const filtered = artworksData.filter(artwork => {
+        const matchesSearch = !searchTerm || 
+            artwork.title.toLowerCase().includes(searchTerm) ||
+            artwork.artist.toLowerCase().includes(searchTerm);
+        
+        const matchesMedium = !medium || artwork.medium === medium;
+        const matchesCategory = !category || artwork.category === category;
+        
+        return matchesSearch && matchesMedium && matchesCategory;
+    });
+    
+    // Re-render grid with filtered results
+    const grid = document.getElementById('artwork-grid');
+    grid.innerHTML = '';
+    
+    filtered.forEach(artwork => {
+        const card = createArtworkCard(artwork);
+        grid.appendChild(card);
+    });
+}
+
+// Create artwork card element
+function createArtworkCard(artwork) {
+    const card = document.createElement('div');
+    card.className = 'art-card';
+    card.style.cssText = `
+        background: var(--white);
+        border: 1px solid var(--sand);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s;
+        cursor: pointer;
+    `;
+    
+    card.innerHTML = `
+        <div class="art-card-img" style="aspect-ratio: 4/3; background: linear-gradient(45deg, var(--parchment), var(--sand)); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--gold);">
+            ${artwork.image}
+        </div>
+        <div class="art-card-info" style="padding: 1.5rem;">
+            <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 0.5rem;">${artwork.title}</h3>
+            <p style="color: var(--mist); font-size: 0.9rem; margin-bottom: 1rem;">
+                by <a href="/profile/@${artwork.username}/" style="color: var(--gold); text-decoration: none; font-weight: 500;" onclick="event.stopPropagation();">${artwork.artist}</a> — ${artwork.medium}
+            </p>
+            <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--mist);">
+                <span>❤️ ${artwork.likes}</span>
+                <span>💬 ${artwork.comments}</span>
+            </div>
+        </div>
+    `;
+    
+    card.onclick = () => openModal(artwork);
+    return card;
+}
+
+// Open artwork modal
+function openModal(artworkId) {
+    const artwork = artworksData.find(a => a.id === artworkId);
+    if (!artwork) return;
+    
+    currentArtwork = artwork;
+    const modal = document.getElementById('artwork-modal');
+    
+    document.getElementById('modal-title').textContent = artwork.title;
+    document.getElementById('modal-artist').textContent = `by ${artwork.artist}`;
+    document.getElementById('modal-description').textContent = artwork.description;
+    document.getElementById('like-count').textContent = artwork.likes;
+    
+    // Update modal image
+    const modalImage = document.getElementById('modal-image');
+    if (artwork.image.startsWith('http') || artwork.image.startsWith('/media/')) {
+        modalImage.innerHTML = `<img src="${artwork.image}" alt="${artwork.title}" style="width: 100%; height: 100%; object-fit: cover;">`;
+    } else {
+        modalImage.innerHTML = `<div style="width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--gold); background: linear-gradient(45deg, var(--parchment), var(--sand));">${artwork.image}</div>`;
+    }
+    
+    // Update like button state
+    const likeBtn = document.getElementById('like-btn');
+    if (likedArtworks.has(artwork.id)) {
+        likeBtn.classList.add('liked');
+        document.getElementById('like-icon').textContent = '❤️';
+    } else {
+        likeBtn.classList.remove('liked');
+        document.getElementById('like-icon').textContent = '🤍';
+    }
+    
+    // Update follow button state
+    const followBtn = document.getElementById('follow-btn');
+    if (followedArtists.has(artwork.username)) {
+        followBtn.textContent = 'Following';
+        followBtn.style.background = 'var(--sand)';
+    } else {
+        followBtn.textContent = 'Follow Artist';
+        followBtn.style.background = 'var(--espresso)';
+    }
+    
+    modal.style.display = 'block';
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal
+function closeModal() {
+    const modal = document.getElementById('artwork-modal');
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+    document.body.style.overflow = 'auto';
+}
+
+// Toggle like
+function toggleLike() {
+    if (!currentArtwork) return;
+    
+    const likeBtn = document.getElementById('like-btn');
+    const likeCount = document.getElementById('like-count');
+    const likeIcon = document.getElementById('like-icon');
+    
+    if (likedArtworks.has(currentArtwork.id)) {
+        likedArtworks.delete(currentArtwork.id);
+        currentArtwork.likes--;
+        likeBtn.classList.remove('liked');
+        likeIcon.textContent = '🤍';
+    } else {
+        likedArtworks.add(currentArtwork.id);
+        currentArtwork.likes++;
+        likeBtn.classList.add('liked');
+        likeIcon.textContent = '❤️';
+    }
+    
+    likeCount.textContent = currentArtwork.likes;
+}
+
+// Save artwork
+function saveArtwork() {
+    if (!currentArtwork) return;
+    
+    // Show success message
+    const message = document.createElement('div');
+    message.textContent = 'Artwork saved to your collection!';
+    message.style.cssText = `
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        background: var(--gold);
+        color: var(--white);
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-family: var(--sans);
+        font-weight: 500;
+        z-index: 1002;
+    `;
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+        document.body.removeChild(message);
+    }, 3000);
+}
+
+// Toggle follow
+function toggleFollow() {
+    if (!currentArtwork) return;
+    
+    const followBtn = document.getElementById('follow-btn');
+    
+    if (followedArtists.has(currentArtwork.artist)) {
+        followedArtists.delete(currentArtwork.artist);
+        followBtn.classList.remove('following');
+        followBtn.textContent = 'Follow Artist';
+    } else {
+        followedArtists.add(currentArtwork.artist);
+        followBtn.classList.add('following');
+        followBtn.textContent = 'Following';
+    }
+}
+
+// Share artwork
+function shareArtwork() {
+    if (!currentArtwork) return;
+    
+    // Copy share link to clipboard
+    const shareUrl = `${window.location.origin}/artwork/${currentArtwork.id}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+        const message = document.createElement('div');
+        message.textContent = 'Share link copied to clipboard!';
+        message.style.cssText = `
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--espresso);
+            color: var(--cream);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-family: var(--sans);
+            font-weight: 500;
+            z-index: 1002;
+        `;
+        document.body.appendChild(message);
+        
+        setTimeout(() => {
+            document.body.removeChild(message);
+        }, 3000);
+    });
+}
+
+// Post comment
+function postComment() {
+    const commentInput = document.getElementById('comment-input');
+    const commentText = commentInput.value.trim();
+    
+    if (!commentText || !currentArtwork) return;
+    
+    const commentsSection = document.getElementById('comments-section');
+    const comment = document.createElement('div');
+    comment.style.cssText = `
+        padding: 1rem;
+        border-bottom: 1px solid var(--parchment);
+        margin-bottom: 1rem;
+    `;
+    comment.innerHTML = `
+        <div style="font-weight: 500; color: var(--espresso); margin-bottom: 0.5rem;">You</div>
+        <div style="color: var(--mist);">${commentText}</div>
+        <div style="font-size: 0.8rem; color: var(--mist); margin-top: 0.5rem;">Just now</div>
+    `;
+    
+    commentsSection.insertBefore(comment, commentsSection.firstChild);
+    commentInput.value = '';
+    
+    // Update comment count
+    currentArtwork.comments++;
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('artwork-modal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initExplore);
+</script>
+{% endblock %}

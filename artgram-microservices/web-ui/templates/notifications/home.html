@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications - ArtGram{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Centre de notifications</div>
+    <h2>Vos <em>alertes</em></h2>
+    <div class="rule"></div>
+</div>
+
+<div style="max-width: 800px; margin: 0 auto;">
+    {% if notifications %}
+        {% for notification in notifications %}
+            <div style="background: {% if not notification.is_read %}var(--cream){% else %}var(--white){% endif %}; border: 1px solid var(--sand); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center;">
+                    <div style="width: 40px; height: 40px; background: {% if not notification.is_read %}var(--gold){% else %}var(--parchment){% endif %}; border-radius: 50%; margin-right: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        {% if notification.notification_type == 'like' %}❤️
+                        {% elif notification.notification_type == 'comment' %}💬
+                        {% elif notification.notification_type == 'follow' %}👤
+                        {% elif notification.notification_type == 'mention' %}🔔
+                        {% else %}📬
+                        {% endif %}
+                    </div>
+                    <div style="flex: 1;">
+                        <p style="margin: 0; color: var(--espresso); {% if not notification.is_read %}font-weight: bold;{% endif %}">
+                            {{ notification.message }}
+                        </p>
+                        <p style="margin: 0; font-size: 0.8rem; color: var(--mist);">
+                            {% if notification.notification_type == 'like' %}{{ notification.sender.display_name|default:notification.sender.username }} a aimé votre œuvre
+                            {% elif notification.notification_type == 'comment' %}{{ notification.sender.display_name|default:notification.sender.username }} a commenté votre œuvre
+                            {% elif notification.notification_type == 'follow' %}{{ notification.sender.display_name|default:notification.sender.username }} vous suit
+                            {% else %}{{ notification.sender.display_name|default:notification.sender.username }}
+                            {% endif %}
+                            {% if notification.artwork %}« {{ notification.artwork.title }} »{% endif %}
+                        </p>
+                        <p style="margin: 0; font-size: 0.8rem; color: var(--mist);">
+                            Le {{ notification.created_at|date:"d/m/Y" }} à {{ notification.created_at|time:"H:i" }}
+                        </p>
+                    </div>
+                </div>
+                {% if notification.artwork %}
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--parchment);">
+                    <a href="/profile/@{{ notification.artwork.artist.username }}/" style="color: var(--gold); text-decoration: none; font-size: 0.9rem;">
+                        Voir l' œuvre →
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div style="background: var(--white); border: 1px solid var(--sand); border-radius: 8px; padding: 3rem; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+            <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Aucune notification</h3>
+            <p style="color: var(--mist);">Vous n'avez reçu aucune notification pour le moment.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

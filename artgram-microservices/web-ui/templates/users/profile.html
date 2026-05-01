@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Profil de {{ username }} - ArtGram{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Profil artiste</div>
+    <h2>{{ username }}</h2>
+    <div class="rule"></div>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto;">
+    <div style="display: flex; align-items: center; margin-bottom: 3rem; padding: 2rem; background: var(--white); border: 1px solid var(--sand); border-radius: 12px; box-shadow: var(--shadow);">
+        {% if profile_user.profile_picture %}
+            <div style="width: 120px; height: 120px; border-radius: 50%; margin-right: 2rem; overflow: hidden; border: 3px solid var(--gold);">
+                <img src="{{ profile_user.profile_picture.url }}" alt="{{ profile_user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+        {% else %}
+            <div style="width: 120px; height: 120px; background: var(--parchment); border-radius: 50%; margin-right: 2rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--gold); border: 3px solid var(--gold);">
+                {{ username.0|upper }}
+            </div>
+        {% endif %}
+        <div style="flex: 1;">
+            <h1 style="font-family: var(--serif); color: var(--espresso); margin: 0 0 0.5rem 0; font-size: 2rem;">
+                {% if profile_user.display_name %}
+                    {{ profile_user.display_name }}
+                {% else %}
+                    {{ profile_user.username }}
+                {% endif %}
+            </h1>
+            {% if profile_user.is_artist %}
+                <p style="margin: 0; color: var(--gold); font-family: var(--narrow); font-style: italic; font-size: 1rem;">Artiste</p>
+            {% endif %}
+            
+            {% if user.is_authenticated and user != profile_user %}
+                <div style="margin-top: 1rem;">
+                    {% if is_following %}
+                        <a href="{% url 'profile:unfollow' profile_user.username %}" 
+                           style="display: inline-block; padding: 0.5rem 1.5rem; background: transparent; color: var(--espresso); border: 2px solid var(--sand); border-radius: 6px; text-decoration: none; font-family: var(--sans); font-size: 0.9rem; font-weight: 500; transition: all 0.2s;">
+                            Unfollow
+                        </a>
+                    {% else %}
+                        <a href="{% url 'profile:follow' profile_user.username %}" 
+                           style="display: inline-block; padding: 0.5rem 1.5rem; background: var(--espresso); color: var(--cream); border: none; border-radius: 6px; text-decoration: none; font-family: var(--sans); font-size: 0.9rem; font-weight: 500; transition: all 0.2s;">
+                            Follow
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+        <div style="background: var(--white); border: 1px solid var(--sand); border-radius: 12px; padding: 2rem; box-shadow: var(--shadow);">
+            <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1.5rem;">Biographie</h3>
+            {% if profile_user.bio %}
+                <p style="color: var(--mist); font-style: italic; line-height: 1.6;">{{ profile_user.bio }}</p>
+            {% else %}
+                <p style="color: var(--mist); font-style: italic; line-height: 1.6;">{{ profile_user.username }} n'a pas encore ajouté de biographie.</p>
+            {% endif %}
+        </div>
+        
+        <div style="background: var(--white); border: 1px solid var(--sand); border-radius: 12px; padding: 2rem; box-shadow: var(--shadow);">
+            <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1.5rem;">Statistiques</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.5rem; text-align: center;">
+                <div>
+                    <div style="font-size: 2.5rem; font-weight: 600; color: var(--espresso); margin-bottom: 0.5rem;">{{ profile_user.get_artworks_count }}</div>
+                    <div style="font-size: 0.9rem; color: var(--mist);">Œuvres</div>
+                </div>
+                <div>
+                    <div style="font-size: 2.5rem; font-weight: 600; color: var(--espresso); margin-bottom: 0.5rem;">{{ profile_user.get_likes_received_count }}</div>
+                    <div style="font-size: 0.9rem; color: var(--mist);">Likes reçus</div>
+                </div>
+                <div>
+                    <div style="font-size: 2.5rem; font-weight: 600; color: var(--espresso); margin-bottom: 0.5rem;">{{ profile_user.get_followers_count }}</div>
+                    <div style="font-size: 0.9rem; color: var(--mist);">Abonnés</div>
+                </div>
+                <div>
+                    <div style="font-size: 2.5rem; font-weight: 600; color: var(--espresso); margin-bottom: 0.5rem;">{{ profile_user.get_following_count }}</div>
+                    <div style="font-size: 0.9rem; color: var(--mist);">Abonnements</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="background: var(--white); border: 1px solid var(--sand); border-radius: 12px; padding: 2rem; box-shadow: var(--shadow);">
+        <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 2rem;">Œuvres récentes</h3>
+        {% if artworks %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+                {% for artwork in artworks %}
+                    <div style="background: var(--parchment); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        {% if artwork.image %}
+                            <div style="height: 200px; overflow: hidden;">
+                                <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        {% else %}
+                            <div style="height: 200px; background: var(--sand); display: flex; align-items: center; justify-content: center; color: var(--mist);">
+                                🎨 {{ artwork.title }}
+                            </div>
+                        {% endif %}
+                        <div style="padding: 1rem;">
+                            <h4 style="margin: 0 0 0.5rem 0; color: var(--espresso); font-family: var(--serif);">{{ artwork.title }}</h4>
+                            <p style="margin: 0 0 0.5rem 0; color: var(--mist); font-size: 0.85rem;">{{ artwork.description|truncatewords:15 }}</p>
+                            <p style="margin: 0; color: var(--gold); font-size: 0.8rem;">
+                                by <a href="{% url 'profile:profile' artwork.artist.username %}" 
+                                   style="color: var(--gold); text-decoration: none; font-weight: 500;">
+                                    {% if artwork.artist.display_name %}
+                                        {{ artwork.artist.display_name }}
+                                    {% else %}
+                                        {{ artwork.artist.username }}
+                                    {% endif %}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: var(--mist); font-style: italic; text-align: center; padding: 2rem;">{{ profile_user.username }} n'a pas encore publié d'œuvres.</p>
+        {% endif %}
+    </div>
+    
+    {% if user.username == username %}
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="/profile/@{{ username }}/edit/" class="btn-outline">Modifier mon profil</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}ArtGram - Discover Contemporary Art{% endblock %}
+
+{% block content %}
+<div class="hero-gallery" style="text-align: center; padding: 4rem 2rem 3rem; background: linear-gradient(135deg, var(--cream) 0%, var(--parchment) 100%);">
+    <div class="eyebrow" style="font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;">Welcome to ArtGram</div>
+    <h1 style="font-family: var(--serif); font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 400; color: var(--espresso); margin: 0.5rem 0; line-height: 1.1;">Where <em>art</em> finds its audience</h1>
+    <div class="rule" style="width: 64px; height: 2px; background: var(--gold); margin: 1.5rem auto;"></div>
+    <p style="font-family: var(--narrow); font-size: 1.2rem; color: var(--mist); margin: 2rem 0 3rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+        Discover extraordinary contemporary art, connect with talented artists, and showcase your own creative journey in our curated digital gallery.
+    </p>
+    
+    <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/login/" style="display: inline-block; padding: 1.2rem 2.5rem; background-color: var(--espresso); color: var(--cream); text-decoration: none; border-radius: 8px; font-family: var(--sans); font-size: 1rem; font-weight: 500; letter-spacing: 0.05em; transition: all 0.3s; box-shadow: var(--shadow);">
+            Sign In
+        </a>
+        <a href="/register/" style="display: inline-block; padding: 1.2rem 2.5rem; background-color: transparent; color: var(--espresso); text-decoration: none; border: 2px solid var(--espresso); border-radius: 8px; font-family: var(--sans); font-size: 1rem; font-weight: 500; letter-spacing: 0.05em; transition: all 0.3s;">
+            Create Account
+        </a>
+    </div>
+</div>
+
+<!-- Featured Artworks Preview -->
+<div style="max-width: 1200px; margin: 0 auto; padding: 3rem 2rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 style="font-family: var(--serif); color: var(--espresso); font-size: 2.5rem; margin-bottom: 1rem;">Featured Artworks</h2>
+        <p style="color: var(--mist); font-family: var(--narrow); font-style: italic;">A glimpse into our curated collection</p>
+    </div>
+    
+    <div class="art-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+        <div class="art-card" style="background: var(--white); border: 1px solid var(--sand); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s;">
+            <div class="art-card-img" style="aspect-ratio: 4/3; background: linear-gradient(45deg, var(--parchment), var(--sand)); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--gold);">
+                🎨
+            </div>
+            <div class="art-card-info" style="padding: 1.5rem;">
+                <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 0.5rem;">Ethereal Landscapes</h3>
+                <p style="color: var(--mist); font-size: 0.9rem; margin-bottom: 1rem;">Sophie Laurent — Digital Art</p>
+                <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--mist);">
+                    <span>❤️ 248</span>
+                    <span>💬 42</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="art-card" style="background: var(--white); border: 1px solid var(--sand); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s;">
+            <div class="art-card-img" style="aspect-ratio: 4/3; background: linear-gradient(45deg, var(--parchment), var(--sand)); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--gold);">
+                📸
+            </div>
+            <div class="art-card-info" style="padding: 1.5rem;">
+                <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 0.5rem;">Urban Silence</h3>
+                <p style="color: var(--mist); font-size: 0.9rem; margin-bottom: 1rem;">Marc Dubois — Photography</p>
+                <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--mist);">
+                    <span>❤️ 189</span>
+                    <span>💬 31</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="art-card" style="background: var(--white); border: 1px solid var(--sand); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s;">
+            <div class="art-card-img" style="aspect-ratio: 4/3; background: linear-gradient(45deg, var(--parchment), var(--sand)); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--gold);">
+                🖌️
+            </div>
+            <div class="art-card-info" style="padding: 1.5rem;">
+                <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 0.5rem;">Abstract Emotions</h3>
+                <p style="color: var(--mist); font-size: 0.9rem; margin-bottom: 1rem;">Clara Rousseau — Mixed Media</p>
+                <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--mist);">
+                    <span>❤️ 156</span>
+                    <span>💬 28</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: center; padding: 2rem; background: var(--white); border-radius: 12px; border: 1px solid var(--sand);">
+        <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Ready to explore more?</h3>
+        <p style="color: var(--mist); margin-bottom: 2rem;">Join thousands of artists and art enthusiasts in our vibrant community</p>
+        <a href="/register/" style="display: inline-block; padding: 1rem 2rem; background-color: var(--gold); color: var(--white); text-decoration: none; border-radius: 8px; font-family: var(--sans); font-weight: 500; transition: all 0.3s;">
+            Start Your Journey
+        </a>
+    </div>
+</div>
+
+<!-- Platform Features -->
+<div style="background: var(--parchment); padding: 4rem 2rem; margin-top: 4rem;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h2 style="font-family: var(--serif); color: var(--espresso); font-size: 2.5rem; margin-bottom: 1rem;">Why ArtGram?</h2>
+            <p style="color: var(--mist); font-family: var(--narrow); font-style: italic;">Designed for artists, curated for art lovers</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
+                <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Showcase Your Work</h3>
+                <p style="color: var(--mist); line-height: 1.6;">Upload and display your artwork in a beautiful, professional gallery setting</p>
+            </div>
+            
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🌍</div>
+                <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Connect with Artists</h3>
+                <p style="color: var(--mist); line-height: 1.6;">Follow talented creators and engage with a vibrant art community</p>
+            </div>
+            
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">💫</div>
+                <h3 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Get Discovered</h3>
+                <p style="color: var(--mist); line-height: 1.6;">Reach art enthusiasts and collectors who appreciate your unique vision</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

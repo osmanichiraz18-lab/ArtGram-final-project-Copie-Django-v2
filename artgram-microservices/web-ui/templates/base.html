@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ArtGram{% endblock %}</title>
+    <!-- Refined typography: Playfair Display, Cormorant Garamond, Jost -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/artgram.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <h1>ArtGram</h1>
+        <p>Plateforme d'art et de créativité — galerie d'inspiration contemporaine</p>
+    </header>
+    
+    <nav class="nav">
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="/explore/">Explore</a></li>
+                <li><a href="/artworks/">Artworks</a></li>
+                <li><a href="/artworks/my-artworks/">My Works</a></li>
+                <li><a href="/profile/add-work/" class="btn-outline">Add Work</a></li>
+                <li><a href="/notifications/">Notifications</a></li>
+                <li><a href="/profile/@{{ user.username }}/">My Profile</a></li>
+                <li><a href="/logout/">Logout</a></li>
+            {% else %}
+                <li><a href="/login/">Sign In</a></li>
+                <li><a href="/register/">Create Account</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <main class="content">
+        <!-- Optional subtle hero block can be overridden -->
+        <div class="hero-gallery">
+            <div class="eyebrow">Curated collection</div>
+            <h2>Là où l'<em>art</em> trouve son public</h2>
+            <div class="rule"></div>
+        </div>
+        
+        {% block content %}
+        <!-- Default content example (can be replaced by child templates) -->
+        <div class="art-grid">
+            <div class="art-card">
+                <div class="art-card-img">🖼️ Œuvre en lumière</div>
+                <div class="art-card-info">
+                    <h3>La grâce du silence</h3>
+                    <p>Élise Moreau — Huile sur lin</p>
+                </div>
+            </div>
+            <div class="art-card">
+                <div class="art-card-img">📸 Instant suspendu</div>
+                <div class="art-card-info">
+                    <h3>Seuil, mémoire</h3>
+                    <p>Nadia Osei — Photographie</p>
+                </div>
+            </div>
+            <div class="art-card">
+                <div class="art-card-img">🎨 Abstraction douce</div>
+                <div class="art-card-info">
+                    <h3>Cartographie du sommeil</h3>
+                    <p>Thomas Brel — Technique mixte</p>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+    
+    <footer class="footer">
+        <p>&copy; 2026 ArtGram — Galerie d'art contemporain — Tous droits réservés</p>
+    </footer>
+</body>
+</html>

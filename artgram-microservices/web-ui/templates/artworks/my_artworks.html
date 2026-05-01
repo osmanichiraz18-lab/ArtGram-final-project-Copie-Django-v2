@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Mes Œuvres - ArtGram{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Collection personnelle</div>
+    <h2>Mes <em>créations</em></h2>
+    <div class="rule"></div>
+</div>
+
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{% url 'artworks:create' %}" class="btn-outline">+ Ajouter une œuvre</a>
+</div>
+
+<div class="art-grid">
+    {% for artwork in artworks %}
+    <div class="art-card">
+        <a href="{% url 'artworks:detail' artwork.slug %}">
+            {% if artwork.image %}
+                <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}" class="art-card-img">
+            {% else %}
+                <div class="art-card-img">🎨 {{ artwork.title }}</div>
+            {% endif %}
+        </a>
+        <div class="art-card-info">
+            <h3>{{ artwork.title }}</h3>
+            <p style="font-size:0.75rem; color:var(--mist); margin-top:0.3rem;">
+                {{ artwork.get_category_display }} — {% if artwork.year %}{{ artwork.year }}{% endif %}
+            </p>
+            <p style="font-size:0.7rem; color:var(--mist); margin-top:0.2rem;">
+                ❤️ {{ artwork.get_likes_count }} • 👁️ {{ artwork.views_count }}
+            </p>
+            <div class="artwork-actions-mini">
+                <a href="{% url 'artworks:edit' artwork.slug %}" class="btn-mini btn-edit">Modifier</a>
+                <a href="{% url 'artworks:delete' artwork.slug %}" class="btn-mini btn-delete">Supprimer</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+        <p style="color: var(--mist); font-style: italic; margin-bottom: 1rem;">Vous n'avez pas encore créé d'œuvres.</p>
+        <a href="{% url 'artworks:create' %}" class="btn-outline">Créer votre première œuvre!</a>
+    </div>
+    {% endfor %}
+</div>
+
+{% if artworks %}
+<div style="text-align: center; margin: 3rem 0;">
+    <a href="{% url 'artworks:home' %}" class="btn-outline">Explorer la galerie</a>
+</div>
+{% endif %}
+
+<style>
+.art-grid {
+    background: #f5f0e8;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.art-card {
+    background: white;
+    border: 1px solid #d6c9b0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.art-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.art-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.art-card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #d6c9b0;
+}
+
+.art-card-info {
+    padding: 1rem;
+    background: #faf8f3;
+    border-top: 1px solid #d6c9b0;
+}
+
+.art-card-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #2b1d12;
+    font-weight: 500;
+}
+
+.art-card-info p {
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+    color: #8a7d6e;
+}
+
+.artwork-actions-mini {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-mini {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-edit {
+    background: #e9ecef;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+}
+
+.btn-edit:hover {
+    background: #dee2e6;
+    color: #495057;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+    border-color: #c82333;
+}
+</style>
+{% endblock %}

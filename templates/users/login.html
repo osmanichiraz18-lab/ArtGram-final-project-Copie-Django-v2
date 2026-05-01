@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion - ArtGram{% endblock %}
+
+{% block extra_head %}
+<style>
+.login-input {
+    width: 100% !important;
+    padding: 0.75rem !important;
+    border: 2px solid #d6c9b0 !important;
+    border-radius: 6px !important;
+    font-family: Jost, sans-serif !important;
+    font-size: 0.9rem !important;
+    background: #fdfaf5 !important;
+    color: #2b1d12 !important;
+    box-sizing: border-box !important;
+    display: block !important;
+}
+
+.login-input:focus {
+    outline: none !important;
+    border-color: #b59a6a !important;
+    box-shadow: 0 0 0 2px rgba(181, 154, 106, 0.2) !important;
+}
+
+.login-container {
+    max-width: 450px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: white;
+    border: 1px solid #d6c9b0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Accès</div>
+    <h2>Connectez-vous à <em>ArtGram</em></h2>
+    <div class="rule"></div>
+</div>
+
+<div class="login-container">
+    {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                    <div style="padding: 0.75rem; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 6px; font-size: 0.9rem;">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="username" style="display: block; margin-bottom: 0.5rem; font-family: Jost, sans-serif; font-weight: 500; color: #2b1d12; font-size: 0.9rem;">Nom d'utilisateur ou Email:</label>
+            <input type="text" id="username" name="username" placeholder="Email or Username" class="login-input" required>
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <label for="password" style="display: block; margin-bottom: 0.5rem; font-family: Jost, sans-serif; font-weight: 500; color: #2b1d12; font-size: 0.9rem;">Mot de passe:</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" class="login-input" required>
+        </div>
+        
+        <button type="submit" style="width: 100%; padding: 1rem; background-color: #2b1d12; color: #fdfaf5; border: none; border-radius: 8px; font-family: Jost, sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; cursor: pointer; transition: background-color 0.2s;">
+            Se connecter
+        </button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #d6c9b0;">
+        <p style="color: #8a7d6e; font-size: 0.9rem; margin-bottom: 0.5rem;">Pas encore de compte?</p>
+        <a href="/register/" style="color: #b59a6a; text-decoration: none; font-weight: 500; font-size: 0.9rem;">Inscrivez-vous</a>
+    </div>
+</div>
+{% endblock %}

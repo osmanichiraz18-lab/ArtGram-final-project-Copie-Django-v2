@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ArtGram — A Gallery for the Digital Age</title>
+<link href="https://fonts.googleapis.com/css2?
+family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:
+ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/
+>
+<style>
+  :root{
+    --cream:    #f5f0e8;
+    --parchment:#ede6d6;
+    --sand:     #d6c9b0;
+    --gold:     #b59a6a;
+    --brown:    #5a3e28;
+    --espresso: #2b1d12;
+    --ink:      #1a1410;
+    --mist:     #8a7d6e;
+    --white:    #fdfaf5;
+    --serif:    'Playfair Display', Georgia, serif;
+    --narrow:   'Cormorant Garamond', serif;
+    --sans:     'Jost', sans-serif;
+    --ease:     cubic-bezier(.25,.46,.45,.94);
+    --shadow:   0 4px 32px rgba(42,28,16,.12);
+    --shadow-lg:0 12px 60px rgba(42,28,16,.18);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:300;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  img{display:block;width:100%;height:100%;object-fit:cover}
+  button{cursor:pointer;border:none;background:none;font-family:var(--sans)}
+  a{text-decoration:none;color:inherit}
+
+  /* ── Noise texture overlay ──────────────────────────── */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  }
+
+  /* ── NAV ───────────────────────────────────────────── */
+  nav{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 3rem;
+    height:68px;
+    background:rgba(245,240,232,.92);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--sand);
+  }
+  .nav-logo{
+    font-family:var(--serif);
+    font-size:1.45rem;
+    font-weight:700;
+    letter-spacing:.04em;
+    color:var(--espresso);
+  }
+  .nav-logo span{
+    font-style:italic;
+    color:var(--gold);
+  }
+  .nav-links{
+    display:flex;
+    gap:2.2rem;
+    list-style:none;
+    align-items:center;
+  }
+  .nav-links li a{
+    font-size:.78rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--mist);
+    transition:color .25s var(--ease);
+    position:relative;
+  }
+  .nav-links li a::after{
+    content:'';
+    position:absolute;
+    bottom:-3px;
+    left:0;
+    right:0;
+    height:1px;
+    background:var(--gold);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform .3s var(--ease);
+  }
+  .nav-links li a:hover,
+  .nav-links li a.active{color:var(--espresso)}
+  .nav-links li a:hover::after,
+  .nav-links li a.active::after{transform:scaleX(1)}
+  .nav-search-icon{
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--mist);
+    transition:color .25s;
+  }
+  .nav-search-icon:hover{color:var(--espresso)}
+  .nav-search-icon svg{width:18px;height:18px;stroke:currentColor;fill:none}
+
+  /* ── PAGE SYSTEM ───────────────────────────────────── */
+  .page{display:none;padding-top:68px;min-height:100vh;animation:fadeIn .45s var(--ease)}
+  .page.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ── HERO ───────────────────────────────────────────── */
+  .hero{
+    text-align:center;
+    padding:5rem 2rem 3.5rem;
+    border-bottom:1px solid var(--sand);
+    position:relative;
+  }
+  .hero-eyebrow{
+    font-family:var(--sans);
+    font-size:.7rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:1.1rem;
+  }
+  .hero h1{
+    font-family:var(--serif);
+    font-size:clamp(2.4rem,5vw,3.8rem);
+    font-weight:400;
+    line-height:1.15;
+    color:var(--espresso);
+    max-width:680px;
+    margin:0 auto .9rem;
+  }
+  .hero h1 em{font-style:italic;color:var(--brown)}
+  .hero p{
+    font-family:var(--narrow);
+    font-size:1.1rem;
+    color:var(--mist);
+    max-width:460px;
+    margin:0 auto;
+    font-weight:300;
+    font-style:italic;
+  }
+  .hero-rule{
+    width:48px;
+    height:1px;
+    background:var(--gold);
+    margin:1.8rem auto 0;
+  }
+
+  /* ── SECTION LABEL ──────────────────────────────────── */
+  .section-header{
+    display:flex;
+    align-items:center;
+    gap:1.2rem;
+    padding:2.2rem 3rem 1.4rem;
+  }
+  .section-header h2{
+    font-family:var(--serif);
+    font-size:1.05rem;
+    font-weight:600;
+    color:var(--espresso);
+    white-space:nowrap;
+  }
+  .section-header::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:linear-gradient(to right,var(--sand),transparent);
+  }
+  .section-tag{
+    font-size:.65rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--gold);
+    border:1px solid var(--gold);
+    padding:.22rem .65rem;
+    margin-left:auto;
+    white-space:nowrap;
+  }
+
+  /* ── GRID ───────────────────────────────────────────── */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:1.6rem;
+    padding:0 3rem 3rem;
+  }
+  .card{
+    position:relative;
+    background:var(--white);
+    border:1px solid var(--sand);
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .38s var(--ease),box-shadow .38s var(--ease);
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    box-shadow:var(--shadow-lg);
+  }
+  .card-img{
+    aspect-ratio:4/3;
+    overflow:hidden;
+    position:relative;
+  }
+  .card-img img{
+    transition:transform .55s var(--ease);
+  }
+  .card:hover .card-img img{transform:scale(1.07)}
+  .card-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top,rgba(27,16,8,.55) 0%,transparent 55%);
+    opacity:0;
+    transition:opacity .35s;
+    display:flex;
+    align-items:flex-end;
+    padding:1rem;
+  }
+  .card:hover .card-overlay{opacity:1}
+  .card-overlay-label{
+    font-family:var(--sans);
+    font-size:.68rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:#fff;
+  }
+  .card-body{
+    padding:.85rem 1rem 1rem;
+    border-top:1px solid var(--parchment);
+  }
+  .card-title{
+    font-family:var(--serif);
+    font-size:1rem;
+    font-weight:400;
+    color:var(--espresso);
+    margin-bottom:.25rem;
+  }
+  .card-meta{
+    font-size:.72rem;
+    color:var(--mist);
+    display:flex;
+    gap:.8rem;
+    align-items:center;
+  }
+  .card-meta span{display:flex;align-items:center;gap:.25rem}
+  .card-meta svg{width:11px;height:11px;stroke:currentColor;fill:none;flex-shrink:0}
+
+  /* ── MODAL ──────────────────────────────────────────── */
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    background:rgba(27,16,8,.72);
+    backdrop-filter:blur(6px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:2rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .35s var(--ease);
+  }
+  .modal-backdrop.open{opacity:1;pointer-events:all}
+  .modal{
+    position:relative;
+    background:var(--white);
+    max-width:900px;
+    width:100%;
+    max-height:90vh;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    border:1px solid var(--sand);
+    box-shadow:0 24px 80px rgba(27,16,8,.35);
+    transform:translateY(24px) scale(.97);
+    transition:transform .38s var(--ease);
+    overflow:hidden;
+  }
+  .modal-backdrop.open .modal{transform:none}
+  .modal-left{position:relative;min-height:400px}
+  .modal-left img{object-fit:cover;height:100%;width:100%}
+  .modal-img-caption{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:.7rem 1rem;
+    background:linear-gradient(to top,rgba(27,16,8,.65),transparent);
+    font-family:var(--narrow);
+    font-style:italic;
+    font-size:.82rem;
+    color:rgba(255,255,255,.85);
+  }
+  .modal-right{
+    display:flex;
+    flex-direction:column;
+    padding:2rem 1.8rem;
+    overflow-y:auto;
+    max-height:90vh;
+  }
+  .modal-close{
+    position:absolute;
+    top:1rem;
+    right:1rem;
+    z-index:10;
+    width:36px;
+    height:36px;
+    background:var(--white);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--espresso);
+    box-shadow:0 2px 12px rgba(0,0,0,.15);
+    transition:background .2s,transform .2s;
+  }
+  .modal-close:hover{background:var(--espresso);color:var(--white);transform:rotate(90deg)}
+  .modal-close svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+  .modal-eyebrow{
+    font-size:.65rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:.55rem;
+  }
+  .modal-title{
+    font-family:var(--serif);
+    font-size:1.6rem;
+    font-weight:400;
+    line-height:1.2;
+    color:var(--espresso);
+    margin-bottom:.3rem;
+  }
+  .modal-artist{
+    font-family:var(--narrow);
+    font-style:italic;
+    font-size:.95rem;
+    color:var(--mist);
+    margin-bottom:1.1rem;
+  }
+  .modal-desc{
+    font-size:.85rem;
+    line-height:1.7;
+    color:var(--brown);
+    margin-bottom:1.4rem;
+    border-top:1px solid var(--parchment);
+    padding-top:1.1rem;
+  }
+
+  /* Like / Share */
+  .modal-actions{display:flex;gap:.7rem;margin-bottom:1.3rem}
+  .btn-like,.btn-share{
+    display:flex;
+    align-items:center;
+    gap:.4rem;
+    padding:.48rem 1.1rem;
+    font-size:.72rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    border:1px solid var(--sand);
+    color:var(--espresso);
+    transition:background .22s,color .22s,border-color .22s;
+  }
+  .btn-like:hover,.btn-share:hover{background:var(--espresso);color:var(--cream);border-color:var(--espresso)}
+  .btn-like svg,.btn-share svg{width:14px;height:14px;stroke:currentColor;fill:none;transition:fill .22s}
+  .btn-like.liked{background:var(--brown);color:var(--white);border-color:var(--brown)}
+  .btn-like.liked svg{fill:var(--white)}
+
+  /* Comments */
+  .modal-comments-label{
+    font-size:.68rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--mist);
+    margin-bottom:.75rem;
+  }
+  .comments-list{
+    max-height:160px;
+    overflow-y:auto;
+    margin-bottom:.85rem;
+    padding-right:.3rem;
+  }
+  .comments-list::-webkit-scrollbar{width:3px}
+  .comments-list::-webkit-scrollbar-thumb{background:var(--sand);border-radius:2px}
+  .comment{
+    display:flex;
+    gap:.65rem;
+    margin-bottom:.75rem;
+  }
+  .comment-avatar{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:var(--parchment);
+    flex-shrink:0;
+    overflow:hidden;
+    font-family:var(--serif);
+    font-size:.7rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--brown);
+    border:1px solid var(--sand);
+  }
+  .comment-body{
+        flex:1;             
+        background:var(--parchment);
+        padding:.5rem .75rem;   
+  }
+  .comment-name{
+    font-size:.7rem;
+    font-weight:500;
+    color:var(--espresso);
+    margin-bottom:.1rem;
+  }
+  .comment-text{font-size:.8rem;color:var(--mist);line-height:1.5}
+  .comment-input-row{
+    display:flex;
+    gap:.5rem;
+    align-items:center;
+    border-top:1px solid var(--parchment);
+    padding-top:.85rem;
+    margin-top:auto;
+  }
+  .comment-input{
+    flex:1;
+    padding:.5rem .75rem;
+    border:1px solid var(--sand);
+    background:var(--cream);
+    font-family:var(--sans);
+    font-size:.8rem;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .2s;
+  }
+  .comment-input:focus{border-color:var(--gold)}
+  .comment-submit{
+    padding:.5rem .9rem;
+    background:var(--espresso);
+    color:var(--cream);
+    font-size:.7rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    transition:background .2s;
+  }
+  .comment-submit:hover{background:var(--brown)}
+
+  /* ── PROFILE PAGE ──────────────────────────────────── */
+  .profile-header{
+    display:flex;
+    gap:2.4rem;
+    align-items:flex-start;
+    padding:3rem 3rem 2rem;
+    border-bottom:1px solid var(--sand);
+  }
+  .profile-avatar{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    overflow:hidden;
+    border:3px solid var(--sand);
+    flex-shrink:0;
+  }
+  .profile-info{
+    flex:1;
+  }
+  .profile-name{
+    font-family:var(--serif);
+    font-size:1.7rem;
+    color:var(--espresso);
+    margin-bottom:.25rem;
+  }
+  .profile-handle{font-size:.78rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem}
+  .profile-bio{
+    font-family:var(--narrow);
+    font-style:italic;
+    font-size:.95rem;
+    color:var(--mist);
+    max-width:500px;
+    line-height:1.65;
+    margin-bottom:.8rem;
+  }
+  .profile-stats{display:flex;gap:2rem}
+  .profile-stat{text-align:center}
+  .profile-stat strong{
+    display:block;
+    font-family:var(--serif);
+    font-size:1.15rem;
+    color:var(--espresso);
+  }
+  .profile-stat span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mist)}
+
+  /* ── SEARCH PAGE ───────────────────────────────────── */
+  .search-bar-wrap{
+    padding:3rem 3rem 1.5rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:1.2rem;
+    border-bottom:1px solid var(--sand);
+  }
+  .search-bar-wrap h2{
+    font-family:var(--serif);
+    font-size:1.4rem;
+    color:var(--espresso);
+    font-weight:400;
+  }
+  .search-bar{
+    display:flex;
+    width:100%;
+    max-width:540px;
+    border:1px solid var(--sand);
+    background:var(--white);
+    overflow:hidden;
+  }
+  .search-bar input{
+    flex:1;
+    padding:.75rem 1.1rem;
+    border:none;
+    outline:none;
+    font-family:var(--sans);
+    font-size:.88rem;
+    color:var(--ink);
+    background:transparent;
+  }
+  .search-bar button{
+    padding:.75rem 1.3rem;
+    background:var(--espresso);
+    color:var(--cream);
+    font-size:.7rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    transition:background .2s;
+  }
+  .search-bar button:hover{background:var(--brown)}
+  .search-empty{
+    text-align:center;
+    padding:4rem 2rem;
+    font-family:var(--narrow);
+    font-style:italic;
+    font-size:1.1rem;
+    color:var(--mist);
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────── */
+  footer{
+    border-top:1px solid var(--sand);
+    padding:1.8rem 3rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .footer-logo{
+    font-family:var(--serif);
+    font-size:.95rem;
+    color:var(--mist);
+  }
+  .footer-copy{
+    font-size:.7rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--sand);
+    }
+      
+
+  /* ── EXPLORE SORT ───────────────────────────────────── */
+  .explore-controls{
+    padding:.5rem 3rem 0;
+    display:flex;
+    gap:.7rem;
+    align-items:center;
+  }
+  .filter-pill{
+    padding:.32rem .9rem;
+    font-size:.67rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    border:1px solid var(--sand);
+    color:var(--mist);
+    transition:all .2s;
+  }
+  .filter-pill:hover,.filter-pill.active{
+    background:var(--espresso);
+    color:var(--cream);
+    border-color:var(--espresso);
+  }
+
+  /* ── NOTIFY TOAST ───────────────────────────────────── */
+  .toast{
+    position:fixed;
+    bottom:2rem;
+    left:50%;
+    transform:translateX(-50%) translateY(10px);
+    background:var(--espresso);
+    color:var(--cream);
+    padding:.65rem 1.5rem;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    z-index:999;
+    opacity:0;
+    transition:opacity .3s,transform .3s;
+    pointer-events:none;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ── RESPONSIVE ─────────────────────────────────────── */
+  @media(max-width:700px){
+    nav{padding:0 1.4rem}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;padding:0 1.4rem 2rem}
+    .section-header,.explore-controls,.profile-header,.search-bar-wrap{padding-left:1.4rem;padding-right:1.4rem}
+    footer{padding:1.4rem;flex-direction:column;gap:.5rem;text-align:center}
+    .modal{grid-template-columns:1fr}
+    .modal-left{min-height:240px}
+    .profile-header{flex-direction:column;gap:1.2rem}
+  }
+  @media(max-width:480px){
+    .nav-links{gap:1.2rem}
+    .hero{padding:3rem 1.4rem 2.5rem}
+  }
+</style>
+</head>
+<body>
+<!-- ── NAV 
+──────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">Art<span>Gram</span></div>
+  <ul class="nav-links">
+    <li><a href="#" class="active" data-page="home">Home</a></li>
+    <li><a href="#" data-page="explore">Explore</a></li>
+    <li><a href="#" data-page="profile">Profile</a></li>
+    <li>
+      <button class="nav-search-icon" data-page="search" title="Search">
+        <svg viewBox="0 0 24 24" stroke-width="1.5">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+        </svg>
+      </button>
+    </li>
+  </ul>
+</nav>
+
+<!-- PAGE: HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <p class="hero-eyebrow">Curated for the discerning eye</p>
+    <h1>Where <em>art</em> finds its audience</h1>
+    <p>A refined platform for artists who believe beauty is a form of thought.</p>
+    <div class="hero-rule"></div>
+  </div>
+  <div class="section-header">
+    <h2>Recent Works</h2>
+    <span class="section-tag">Featured</span>
+  </div>
+  <div class="grid" id="home-grid"></div>
+  <footer>
+    <div class="footer-logo">ArtGram</div>
+    <div class="footer-copy">© 2025 · All rights reserved</div>
+  </footer>
+</div>
+
+<!-- PAGE: EXPLORE -->
+<div class="page" id="page-explore">
+  <div class="hero">
+    <p class="hero-eyebrow">Discover · Wander · Collect</p>
+    <h1>The <em>Explore</em> Gallery</h1>
+    <p>Serendipitous encounters with works you were meant to find.</p>
+    <div class="hero-rule"></div>
+  </div>
+  <div class="section-header">
+    <h2>All Works</h2>
+    <span class="section-tag">Randomised</span>
+  </div>
+  <div class="explore-controls">
+    <button class="filter-pill active">All</button>
+    <button class="filter-pill">Painting</button>
+    <button class="filter-pill">Photography</button>
+    <button class="filter-pill">Digital</button>
+    <button class="filter-pill">Mixed</button>
+  </div>
+  <div class="grid" id="explore-grid" style="margin-top:1.2rem"></div>
+  <footer>
+    <div class="footer-logo">ArtGram</div>
+    <div class="footer-copy">© 2025 · All rights reserved</div>
+  </footer>
+</div>
+
+<!-- PAGE: PROFILE -->
+<div class="page" id="page-profile">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop&crop=face" alt="Artist"/>
+    </div>
+    <div class="profile-info">
+      <div class="profile-name">Élise Moreau</div>
+      <div class="profile-handle">@elise.moreau · Paris, France</div>
+      <div class="profile-bio">
+        "I paint silence. I photograph memory. I sculpt the space between two thoughts."<br>
+        Fine arts graduate, Beaux-Arts de Paris. Working in oil, linen, and light since 2011.
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><strong>148</strong><span>Works</span></div>
+        <div class="profile-stat"><strong>24.6k</strong><span>Followers</span></div>
+        <div class="profile-stat"><strong>3.2k</strong><span>Likes</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-header">
+    <h2>Portfolio</h2>
+    <span class="section-tag">148 works</span>
+  </div>
+  <div class="grid" id="profile-grid"></div>
+  <footer>
+    <div class="footer-logo">ArtGram</div>
+    <div class="footer-copy">© 2025 · All rights reserved</div>
+  </footer>
+</div>
+
+<!-- PAGE: SEARCH -->
+<div class="page" id="page-search">
+  <div class="search-bar-wrap">
+    <h2>Search the Collection</h2>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Artist, medium, mood…" autocomplete="off"/>
+      <button id="search-btn">Search</button>
+    </div>
+  </div>
+  <div class="section-header" id="search-results-header" style="display:none">
+    <h2>Results</h2>
+    <span class="section-tag" id="search-count"></span>
+  </div>
+  <div class="grid" id="search-grid"></div>
+  <div class="search-empty" id="search-empty">
+    Enter a keyword to begin your search
+  </div>
+  <footer>
+    <div class="footer-logo">ArtGram</div>
+    <div class="footer-copy">© 2025 · All rights reserved</div>
+  </footer>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal">
+    <div class="modal-left">
+      <img id="modal-img" src="" alt=""/>
+      <div class="modal-img-caption" id="modal-caption"></div>
+    </div>
+    <div class="modal-right">
+      <button class="modal-close" id="modal-close">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="modal-eyebrow" id="modal-medium"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-artist" id="modal-artist"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-actions">
+        <button class="btn-like" id="btn-like">
+          <svg viewBox="0 0 24 24">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span id="like-count">0</span>
+        </button>
+        <button class="btn-share" id="btn-share">
+          <svg viewBox="0 0 24 24">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          Share
+        </button>
+      </div>
+      <div class="modal-comments-label">Comments</div>
+      <div class="comments-list" id="comments-list"></div>
+      <div class="comment-input-row">
+        <input class="comment-input" id="comment-input" placeholder="Leave a reflection…"/>
+        <button class="comment-submit" id="comment-submit">Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── DATA ─────────────────────────────────────── */
+const ARTWORKS = [
+  {
+    id:1, title:"La Lumière du Soir",
+    artist:"Élise Moreau", medium:"Oil on Linen",
+    year:2023,
+    desc:"A meditation on the quality of evening light as it falls across an unmade bed — the intimacy of the ordinary made extraordinary through attention.",
+    img:"https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&h=600&fit=crop",
+    likes:214, category:"Painting",
+    comments:[
+      {name:"Soren A.",text:"The light in this work is almost physical. Extraordinary."},
+      {name:"M. Tanaka",text:"Reminds me of Hammershøi. A rare quietude."},
+    ]
+  },
+  {
+    id:2, title:"Threshold",
+    artist:"Nadia Osei", medium:"Photography",
+    year:2024,
+    desc:"Standing at the edge of memory — this series examines doorways as metaphors for transition, using long exposures to blur the figure between presence and absence.",
+    img:"https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800&h=600&fit=crop",
+    likes:89, category:"Photography",
+    comments:[
+      {name:"C. Reyes",text:"The long exposure technique here is used with such restraint."}
+    ]
+  },
+  {
+    id:3, title:"Archive No. 7",
+    artist:"Yusuf Karahan", medium:"Mixed Media",
+    year:2022,
+    desc:"Fragments of letters, pressed botanicals, and photographic residue — a layered archaeology of correspondence between two people who never met.",
+    img:"https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop",
+    likes:312, category:"Mixed",
+    comments:[
+      {name:"R. Dubois",text:"Collage as poetry. Each layer tells a different story."},
+      {name:"P. Winters",text:"I keep discovering new elements each time I look."},
+    ]
+  },
+  {
+    id:4, title:"Still II",
+    artist:"Élise Moreau", medium:"Oil on Canvas",
+    year:2023,
+    desc:"The second in a series examining domestic stillness. A glass of water, a folded cloth, a window. Presence through absence.",
+    img:"https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=800&h=600&fit=crop",
+    likes:178, category:"Painting",
+    comments:[]
+  },
+  {
+    id:5, title:"Dusk Protocol",
+    artist:"Ines Varga", medium:"Digital",
+    year:2024,
+    desc:"A generative work exploring the visual language of dusk — the precise moment colour loses its name. Rendered in 4K with custom shader algorithms.",
+    img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
+    likes:442, category:"Digital",
+    comments:[
+      {name:"A. Flores",text:"The shader work is invisible — which is the point."}
+    ]
+  },
+  {
+    id:6, title:"Remnant",
+    artist:"Nadia Osei", medium:"Photography",
+    year:2023,
+    desc:"A lone chair on an empty stage. The performance has ended. This image asks: what does a space remember after it is vacated?",
+    img:"https://images.unsplash.com/photo-1501084817091-a4f3d1d19e07?w=800&h=600&fit=crop",
+    likes:267, category:"Photography",
+    comments:[]
+  },
+  {
+    id:7, title:"Cartography of Sleep",
+    artist:"Thomas Brel", medium:"Painting",
+    year:2022,
+    desc:"Inspired by sleep studies and the topology of dream states — large-format oil work mapping the invisible terrain of the resting mind.",
+    img:"https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&h=600&fit=crop",
+    likes:153, category:"Painting",
+    comments:[
+      {name:"K. Lindström",text:"The scale of this piece must be overwhelming in person."}
+    ]
+  },
+  {
+    id:8, title:"Form Study V",
+    artist:"Ines Varga", medium:"Digital",
+    year:2024,
+    desc:"Part of an ongoing series examining the relationship between geometric form and organic improvisation. Made entirely with procedural tools.",
+    img:"https://images.unsplash.com/photo-1622737133809-d95047b9e673?w=800&h=600&fit=crop",
+    likes:96, category:"Digital",
+    comments:[]
+  },
+  {
+    id:9, title:"Grey Water",
+    artist:"Thomas Brel", medium:"Mixed Media",
+    year:2023,
+    desc:"Encaustic wax, pigment, and salvaged textile — layers built up and scraped back to reveal a surface that behaves like weather.",
+    img:"https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=800&h=600&fit=crop",
+    likes:389, category:"Mixed",
+    comments:[
+      {name:"O. Marchand",text:"The surface here is like a landscape seen from altitude."},
+      {name:"L. Fei",text:"The restraint in the palette is remarkable."}
+    ]
+  }
+];
+
+/* ── STATE ────────────────────────────────────── */
+let currentArtwork = null;
+const likedSet = new Set();
+const artworkLikes = {};
+ARTWORKS.forEach(a => artworkLikes[a.id] = a.likes);
+const artworkComments = {};
+ARTWORKS.forEach(a => artworkComments[a.id] = [...a.comments]);
+
+/* ── CARD BUILDER ─────────────────────────────── */
+function buildCard(art){
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.innerHTML = `
+    <div class="card-img">
+      <img src="${art.img}&q=80" alt="${art.title}" loading="lazy"/>
+      <div class="card-overlay"><span class="card-overlay-label">View Work</span></div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${art.title}</div>
+      <div class="card-meta">
+        <span>
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l7.78-7.78a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          ${art.likes}
+        </span>
+        <span>${art.artist}</span>
+        <span>${art.year}</span>
+      </div>
+    </div>
+  `;
+  div.addEventListener('click', ()=> openModal(art));
+  return div;
+}
+
+/* ── RENDER GRIDS ─────────────────────────────── */
+function renderGrid(el, arts){
+  el.innerHTML = '';
+  arts.forEach(a => el.appendChild(buildCard(a)));
+}
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+
+/* ── MODAL ────────────────────────────────────── */
+function openModal(art){
+  currentArtwork = art;
+  document.getElementById('modal-img').src = art.img + '&q=80';
+  document.getElementById('modal-caption').textContent = art.title + ' · ' + art.year;
+  document.getElementById('modal-medium').textContent = art.medium;
+  document.getElementById('modal-title').textContent = art.title;
+  document.getElementById('modal-artist').textContent = art.artist;
+  document.getElementById('modal-desc').textContent = art.desc;
+  document.getElementById('like-count').textContent = artworkLikes[art.id];
+  const likeBtn = document.getElementById('btn-like');
+  likeBtn.classList.toggle('liked', likedSet.has(art.id));
+  renderComments(art.id);
+  document.getElementById('comment-input').value = '';
+  document.getElementById('modal-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  document.getElementById('modal-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderComments(id){
+  const list = document.getElementById('comments-list');
+  const comments = artworkComments[id] || [];
+  if(!comments.length){
+    list.innerHTML = '<div style="font-size:.8rem;color:var(--mist);font-style:italic;padding:.3rem 0">Be the first to leave a reflection.</div>';
+    return;
+  }
+  list.innerHTML = comments.map(c=>`
+    <div class="comment">
+      <div class="comment-avatar">${c.name.charAt(0)}</div>
+      <div class="comment-body">
+        <div class="comment-name">${c.name}</div>
+        <div class="comment-text">${c.text}</div>
+      </div>
+    </div>
+  `).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+/* ── LIKE ─────────────────────────────────────── */
+document.getElementById('btn-like').addEventListener('click', ()=>{
+  if(!currentArtwork) return;
+  const id = currentArtwork.id;
+  if(likedSet.has(id)){
+    likedSet.delete(id);
+    artworkLikes[id]--;
+    document.getElementById('btn-like').classList.remove('liked');
+  } else {
+    likedSet.add(id);
+    artworkLikes[id]++;
+    document.getElementById('btn-like').classList.add('liked');
+    showToast('Added to your favourites');
+  }
+  document.getElementById('like-count').textContent = artworkLikes[id];
+  });
+
+/* ── SHARE ────────────────────────────────────── */
+document.getElementById('btn-share').addEventListener('click', ()=>{
+  navigator.clipboard?.writeText(window.location.href).catch(()=>{});
+  showToast('Link copied to clipboard');
+});
+
+/* ── COMMENT ──────────────────────────────────── */
+function submitComment(){
+  const input = document.getElementById('comment-input');
+  const text = input.value.trim();
+  if(!text || !currentArtwork) return;
+  artworkComments[currentArtwork.id].push({name:'You', text});
+  input.value = '';
+  renderComments(currentArtwork.id);
+}
+document.getElementById('comment-submit').addEventListener('click', submitComment);
+document.getElementById('comment-input').addEventListener('keydown', e=>{
+  if(e.key === 'Enter') submitComment();
+});
+
+/* ── CLOSE MODAL ──────────────────────────────── */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-backdrop').addEventListener('click', e=>{
+  if(e.target === document.getElementById('modal-backdrop')) closeModal();
+});
+document.addEventListener('keydown', e=>{ 
+  if(e.key==='Escape') closeModal(); 
+});
+
+/* ── TOAST ────────────────────────────────────── */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 2500);
+}
+
+/* ── SEARCH ───────────────────────────────────── */
+function doSearch(){
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const grid = document.getElementById('search-grid');
+  const empty = document.getElementById('search-empty');
+  const header = document.getElementById('search-results-header');
+  const countEl = document.getElementById('search-count');
+  if(!q){
+    grid.innerHTML = '';
+    header.style.display = 'none';
+    empty.style.display = 'block';
+    empty.textContent = 'Enter a keyword to begin your search';
+    return;
+  }
+  const results = ARTWORKS.filter(a =>
+    a.title.toLowerCase().includes(q) ||
+    a.artist.toLowerCase().includes(q) ||
+    a.medium.toLowerCase().includes(q) ||
+    a.category.toLowerCase().includes(q) ||
+    a.desc.toLowerCase().includes(q)
+  );
+  empty.style.display = results.length ? 'none' : 'block';
+  header.style.display = results.length ? 'flex' : 'none';
+  if(!results.length){
+    grid.innerHTML = '';
+    empty.textContent = `No results for "${q}"`;
+    return;
+  }
+  countEl.textContent = results.length + ' found';
+  renderGrid(grid, results);
+}
+document.getElementById('search-btn').addEventListener('click', doSearch);
+document.getElementById('search-input').addEventListener('keydown', e=>{
+  if(e.key==='Enter') doSearch();
+});
+
+/* ── FILTER PILLS ─────────────────────────────── */
+document.querySelectorAll('.filter-pill').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filter-pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.textContent.trim();
+    const arts = cat === 'All' ? shuffle(ARTWORKS) : 
+      shuffle(ARTWORKS.filter(a=>a.category===cat));
+    renderGrid(document.getElementById('explore-grid'), arts);
+  });
+});
+
+/* ── NAV ──────────────────────────────────────── */
+function navigateTo(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links li a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+pageId).classList.add('active');
+  document.querySelectorAll(`[data-page="${pageId}"]`).forEach(el=>el.classList.add('active'));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-page]').forEach(el=>{
+  el.addEventListener('click', e=>{
+    e.preventDefault();
+    navigateTo(el.dataset.page);
+  });
+});
+
+/* ── INIT ─────────────────────────────────────── */
+renderGrid(document.getElementById('home-grid'), ARTWORKS);
+renderGrid(document.getElementById('explore-grid'), shuffle(ARTWORKS));
+renderGrid(document.getElementById('profile-grid'), ARTWORKS.filter(a=>a.artist==='Élise Moreau').concat(ARTWORKS.filter(a=>a.artist!=='Élise Moreau').slice(0,4)));
+</script>
+</body>
+</html>

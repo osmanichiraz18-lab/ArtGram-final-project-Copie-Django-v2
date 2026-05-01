@@ -1,0 +1,145 @@
+services:
+  # Consul Service Registry & Discovery
+  consul:
+    image: hashicorp/consul:1.15
+    container_name: consul
+    command: consul agent -dev -client=0.0.0.0 -ui
+    ports:
+      - "8500:8500"
+    networks:
+      - artgram-network
+    volumes:
+      - consul_data:/consul/data
+
+  # User Service - Authentication & User Management
+  user-service:
+    build: ./services/user-service
+    container_name: user-service
+    ports:
+      - "8001:8001"
+    environment:
+      - SERVICE_NAME=user-service
+      - PORT=8001
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+    volumes:
+      - ./services/user-service/db.sqlite3:/app/db.sqlite3
+    networks:
+      - artgram-network
+    depends_on:
+      - consul
+
+  # Artwork Service - Artwork CRUD
+  artwork-service:
+    build: ./services/artwork-service
+    container_name: artwork-service
+    ports:
+      - "8002:8002"
+    environment:
+      - SERVICE_NAME=artwork-service
+      - PORT=8002
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+    volumes:
+      - ./services/artwork-service/db.sqlite3:/app/db.sqlite3
+    networks:
+      - artgram-network
+    depends_on:
+      - consul
+      - user-service
+
+  # Explore Service - Gallery & Discovery
+  explore-service:
+    build: ./services/explore-service
+    container_name: explore-service
+    ports:
+      - "8003:8003"
+    environment:
+      - SERVICE_NAME=explore-service
+      - PORT=8003
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+    volumes:
+      - ./services/explore-service/db.sqlite3:/app/db.sqlite3
+    networks:
+      - artgram-network
+    depends_on:
+      - consul
+      - artwork-service
+
+  # Interaction Service - Likes, Comments, Follows
+  interaction-service:
+    build: ./services/interaction-service
+    container_name: interaction-service
+    ports:
+      - "8004:8004"
+    environment:
+      - SERVICE_NAME=interaction-service
+      - PORT=8004
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+    volumes:
+      - ./services/interaction-service/db.sqlite3:/app/db.sqlite3
+    networks:
+      - artgram-network
+    depends_on:
+      - consul
+      - user-service
+      - artwork-service
+
+  # Notification Service - Real-time Notifications
+  notification-service:
+    build: ./services/notification-service
+    container_name: notification-service
+    ports:
+      - "8005:8005"
+    environment:
+      - SERVICE_NAME=notification-service
+      - PORT=8005
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+    volumes:
+      - ./services/notification-service/db.sqlite3:/app/db.sqlite3
+    networks:
+      - artgram-network
+    depends_on:
+      - consul
+
+  # Nginx API Gateway
+  nginx:
+    build: ./nginx
+    container_name: nginx-gateway
+    ports:
+      - "80:80"
+      - "8000:80"
+      - "443:443"
+    depends_on:
+      - user-service
+      - artwork-service
+      - explore-service
+      - interaction-service
+      - notification-service
+    networks:
+      - artgram-network
+    restart: on-failure
+
+  # Web UI - Frontend Application
+  web-ui:
+    build: ./web-ui
+    container_name: web-ui
+    ports:
+      - "3000:3000"
+    environment:
+      - API_GATEWAY=http://nginx
+      - NODE_ENV=development
+    networks:
+      - artgram-network
+    depends_on:
+      - nginx
+
+networks:
+  artgram-network:
+    driver: bridge
+
+volumes:
+  consul_data:

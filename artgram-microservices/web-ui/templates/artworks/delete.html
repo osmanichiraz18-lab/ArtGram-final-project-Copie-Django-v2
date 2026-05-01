@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Supprimer {{ artwork.title }} - ArtGram{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Confirmation de suppression</div>
+    <h2>Supprimer <em>{{ artwork.title }}</em></h2>
+    <div class="rule"></div>
+</div>
+
+<div class="delete-container">
+    <div class="delete-warning">
+        <h3>⚠️ Attention</h3>
+        <p>Êtes-vous sûr de vouloir supprimer cette œuvre ? Cette action est irréversible.</p>
+    </div>
+    
+    <div class="artwork-preview">
+        {% if artwork.image %}
+            <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}" style="max-width: 200px; border-radius: 4px;">
+        {% else %}
+            <div style="background: var(--mist); width: 200px; height: 150px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                🎨
+            </div>
+        {% endif %}
+        
+        <div class="artwork-info">
+            <h4>{{ artwork.title }}</h4>
+            <p>{{ artwork.get_category_display }} — {% if artwork.year %}{{ artwork.year }}{% endif %}</p>
+            <p><small>{{ artwork.description|truncatewords:20 }}</small></p>
+        </div>
+    </div>
+    
+    <form method="post" class="delete-form">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn-danger">Oui, supprimer cette œuvre</button>
+            <a href="{% url 'artworks:detail' artwork.slug %}" class="btn-outline">Non, annuler</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.delete-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--background);
+    border-radius: 8px;
+}
+
+.delete-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.delete-warning h3 {
+    color: #856404;
+    margin-bottom: 0.5rem;
+}
+
+.delete-warning p {
+    color: #856404;
+    margin: 0;
+}
+
+.artwork-preview {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 4px;
+}
+
+.artwork-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--primary);
+}
+
+.artwork-info p {
+    margin: 0.25rem 0;
+    color: var(--text);
+}
+
+.delete-form {
+    text-align: center;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+@media (max-width: 768px) {
+    .artwork-preview {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}

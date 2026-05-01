@@ -1,10 +1,13 @@
 from django.urls import path
 from . import views
 
+app_name = 'users'
+
 urlpatterns = [
+    path('', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
-    path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
-    path('profile/<str:username>/', views.profile_view, name='profile'),
-    path('profile/edit/', views.edit_profile_view, name='edit_profile'),
+    path('@<str:username>/', views.profile_view, name='profile'),
+    path('@<str:username>/edit/', views.edit_profile_view, name='edit_profile'),
+    path('add-work/', views.add_work_view, name='add_work'),
 ]

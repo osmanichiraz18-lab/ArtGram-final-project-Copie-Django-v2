@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Work - ArtGram{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Create</div>
+    <h2>Share your <em>artwork</em></h2>
+    <div class="rule"></div>
+</div>
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="background: var(--white); border: 1px solid var(--sand); border-radius: 12px; padding: 3rem; box-shadow: var(--shadow);">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <!-- Left Column - Form Fields -->
+                <div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="title" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Title *</label>
+                        <input type="text" id="title" name="title" required maxlength="100" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; background: var(--white); color: var(--espresso);">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="medium" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Medium *</label>
+                        <select id="medium" name="medium" required 
+                                style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; background: var(--white); color: var(--espresso);">
+                            <option value="">Select medium</option>
+                            <option value="painting">Painting</option>
+                            <option value="photography">Photography</option>
+                            <option value="digital">Digital Art</option>
+                            <option value="mixed">Mixed Media</option>
+                            <option value="sculpture">Sculpture</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="category" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Category *</label>
+                        <select id="category" name="category" required 
+                                style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; background: var(--white); color: var(--espresso);">
+                            <option value="">Select category</option>
+                            <option value="abstract">Abstract</option>
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                            <option value="still_life">Still Life</option>
+                            <option value="urban">Urban</option>
+                            <option value="nature">Nature</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="year" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Year Created *</label>
+                        <input type="number" id="year" name="year" required min="1900" max="2026" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; background: var(--white); color: var(--espresso);">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="tags" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Tags</label>
+                        <input type="text" id="tags" name="tags" placeholder="contemporary, abstract, colorful" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; background: var(--white); color: var(--espresso);">
+                        <p style="font-size: 0.8rem; color: var(--mist); margin-top: 0.5rem;">Separate tags with commas</p>
+                    </div>
+                </div>
+                
+                <!-- Right Column - Description and Image -->
+                <div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="description" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Description</label>
+                        <textarea id="description" name="description" rows="6" placeholder="Tell us about your artwork, inspiration, or technique..."
+                                  style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; background: var(--white); color: var(--espresso); resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="image" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Artwork Image *</label>
+                        <input type="file" id="image" name="image" required accept="image/jpeg,image/png,image/jpg" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid var(--sand); border-radius: 6px; font-family: var(--sans); font-size: 0.9rem; background: var(--white); color: var(--espresso);">
+                        <p style="font-size: 0.8rem; color: var(--mist); margin-top: 0.5rem;">JPG/PNG, max 10MB, recommended 1200x1200px</p>
+                    </div>
+                    
+                    <!-- Preview Section -->
+                    <div id="preview-section" style="margin-top: 2rem; padding: 1.5rem; background: var(--parchment); border-radius: 8px; display: none;">
+                        <h4 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1rem;">Preview</h4>
+                        <div style="aspect-ratio: 1/1; background: var(--white); border: 1px solid var(--sand); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--mist);">
+                            <span>Image preview will appear here</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Publishing Options -->
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--parchment);">
+                <h4 style="font-family: var(--serif); color: var(--espresso); margin-bottom: 1.5rem;">Publishing Options</h4>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <button type="submit" name="action" value="publish" 
+                            style="flex: 1; padding: 1rem; background-color: var(--espresso); color: var(--cream); border: none; border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; cursor: pointer; transition: background-color 0.2s;">
+                        Publish Now
+                    </button>
+                    <button type="submit" name="action" value="draft" 
+                            style="flex: 1; padding: 1rem; background-color: transparent; color: var(--espresso); border: 2px solid var(--sand); border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;">
+                        Save as Draft
+                    </button>
+                    <button type="button" onclick="history.back()" 
+                            style="flex: 1; padding: 1rem; background-color: transparent; color: var(--mist); border: 2px solid var(--sand); border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;">
+                        Cancel
+                    </button>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" id="agree_terms" name="agree_terms" required style="width: auto;">
+                    <label for="agree_terms" style="font-size: 0.9rem; color: var(--mist); margin: 0;">
+                        I agree to the <a href="#" style="color: var(--gold);">Terms of Service</a> and <a href="#" style="color: var(--gold);">Community Guidelines</a>
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Simple image preview functionality
+document.getElementById('image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('preview-section');
+    
+    if (file) {
+        preview.style.display = 'block';
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.querySelector('div').innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

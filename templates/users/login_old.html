@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion - ArtGram{% endblock %}
+
+{% block extra_head %}
+<style>
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100% !important;
+    padding: 0.75rem !important;
+    border: 1px solid #d6c9b0 !important;
+    border-radius: 6px !important;
+    font-family: Jost, sans-serif !important;
+    font-size: 0.9rem !important;
+    background: #fdfaf5 !important;
+    color: #2b1d12 !important;
+    box-sizing: border-box !important;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+    outline: none !important;
+    border-color: #b59a6a !important;
+    box-shadow: 0 0 0 2px rgba(181, 154, 106, 0.2) !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-gallery">
+    <div class="eyebrow">Accès</div>
+    <h2>Connectez-vous à <em>ArtGram</em></h2>
+    <div class="rule"></div>
+</div>
+
+<div style="max-width: 450px; margin: 2rem auto; padding: 2.5rem; background: var(--white); border: 1px solid var(--sand); border-radius: 12px; box-shadow: var(--shadow);">
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="{{ form.username.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Nom d'utilisateur ou Email:</label>
+            <input type="text" name="username" placeholder="Email or Username" style="width: 100%; padding: 0.75rem; border: 1px solid #d6c9b0; border-radius: 6px; font-family: Jost, sans-serif; font-size: 0.9rem; background: #fdfaf5; color: #2b1d12; box-sizing: border-box;">
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <label for="{{ form.password.id_for_label }}" style="display: block; margin-bottom: 0.5rem; font-family: var(--sans); font-weight: 500; color: var(--espresso); font-size: 0.9rem;">Mot de passe:</label>
+            <input type="password" name="password" placeholder="••••••••" style="width: 100%; padding: 0.75rem; border: 1px solid #d6c9b0; border-radius: 6px; font-family: Jost, sans-serif; font-size: 0.9rem; background: #fdfaf5; color: #2b1d12; box-sizing: border-box;">
+        </div>
+        
+        <button type="submit" style="width: 100%; padding: 1rem; background-color: var(--espresso); color: var(--cream); border: none; border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; cursor: pointer; transition: background-color 0.2s;">
+            Se connecter
+        </button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--parchment);">
+        <p style="color: var(--mist); font-size: 0.9rem; margin-bottom: 0.5rem;">Pas encore de compte?</p>
+        <a href="/register/" style="color: var(--gold); text-decoration: none; font-weight: 500; font-size: 0.9rem;">Inscrivez-vous</a>
+    </div>
+</div>
+{% endblock %}
